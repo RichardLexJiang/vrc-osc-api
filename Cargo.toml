@@ -2,6 +2,12 @@
 name = "vrc-osc-api"
 version = "0.0.1"
 edition = "2024"
+description = "A small, personal Rust SDK for sending OSC messages to VRChat over UDP."
+license = "MIT"
+readme = "README.md"
+homepage = "https://github.com/RichardLexJiang/vrc-osc-api"
+repository = "https://github.com/RichardLexJiang/vrc-osc-api"
+documentation = "https://github.com/RichardLexJiang/vrc-osc-api"
 
 [dependencies]
 

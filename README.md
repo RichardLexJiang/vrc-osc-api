@@ -23,7 +23,7 @@ If this repository is available locally, add it as a path dependency:
 
 ```toml
 [dependencies]
-vrc-osc-api = { path = "../vrc-osc-api" }
+vrc-osc-api = "0.0.1"
 ```
 
 Then send a chatbox message:
