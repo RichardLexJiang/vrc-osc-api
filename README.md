@@ -1,6 +1,6 @@
 # vrc-osc-api 
 
-> AI generated
+👇 AI generated 👇
 
 A small, personal Rust SDK for sending OSC messages to VRChat over UDP. The project is currently a work in progress, intended for self-use and experimentation rather than as a stable, general-purpose OSC implementation.
 
@@ -19,7 +19,7 @@ VRChat's default OSC input address is `127.0.0.1:9000`. If your setup uses a dif
 
 ## Use from a Rust project
 
-If this repository is available locally, add it as a path dependency:
+add it as a dependency:
 
 ```toml
 [dependencies]
@@ -71,3 +71,7 @@ This SDK is under active development and does not yet implement all OSC value en
 
 The chatbox API currently exposes only the message text through `ChatboxInput::new`; keyboard-bypass and notification-sound options use their defaults. The OSC encoder and its string padding are also incomplete, so verify packet behavior against your VRChat setup before relying on it.
 
+## References
+
+[OSC-Specification-1.0](https://opensoundcontrol.stanford.edu/spec-1_0.html)  
+[VRC OSC Overview](https://docs.vrchat.com/docs/osc-overview)  
