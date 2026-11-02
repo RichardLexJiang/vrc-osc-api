@@ -1,4 +1,4 @@
-use crate::osc::{message::OscMessage, value::OSCValue};
+use crate::osc::message::OscMessage;
 
 /// - `msg` Input text into the chatbox.
 /// - If `bypass_keyboard` is True, send the text in `msg` immediately, bypassing the keyboard. If `bypass_keyboard` is False, open the keyboard and populate it with the provided text.  
@@ -21,9 +21,9 @@ impl ChatboxInput {
 impl From<ChatboxInput> for OscMessage {
     fn from(value: ChatboxInput) -> Self {
         OscMessage::new("/chatbox/input")
-            .arg(OSCValue::OSCString(value.msg))
-            .arg(OSCValue::Bool(value.bypass_keyboard))
-            .arg(OSCValue::Bool(value.sfx_trigger))
+            .arg(value.msg)
+            .arg(value.bypass_keyboard)
+            .arg(value.sfx_trigger)
     }
 }
 
@@ -45,7 +45,7 @@ pub struct ChatboxTyping {
 
 impl From<ChatboxTyping> for OscMessage {
     fn from(value: ChatboxTyping) -> Self {
-        OscMessage::new("/chatbox/typing").arg(OSCValue::Bool(value.toggle))
+        OscMessage::new("/chatbox/typing").arg(value.toggle)
     }
 }
 

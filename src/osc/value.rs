@@ -44,24 +44,41 @@ impl OSCValue {
     pub fn write_to_buffer(&self, buffer: &mut Vec<u8>) {
         match self {
             OSCValue::Int32(i) => buffer.append(&mut i.to_be_bytes().to_vec()),
+            OSCValue::Int64(i) => buffer.append(&mut i.to_be_bytes().to_vec()),
             OSCValue::Float32(f) => buffer.append(&mut f.to_be_bytes().to_vec()),
+            OSCValue::Float64(f) => buffer.append(&mut f.to_be_bytes().to_vec()),
             OSCValue::OSCString(s) => {
                 buffer.append(&mut s.as_bytes().to_vec());
                 realign_bytes(buffer);
             }
+            OSCValue::ASCIICharacter(c) => buffer.append(&mut c.to_be_bytes().to_vec()),
+            OSCValue::Bool(_) => {}
+            OSCValue::Nil => {}
+            OSCValue::Infinitum => {}
+            OSCValue::LeftSquareBracket => {}
+            OSCValue::RightSquareBracket => {}
             OSCValue::OSCBlob(_) => todo!(),
-            OSCValue::Int64(_) => todo!(),
             OSCValue::OSCTimetag(_) => todo!(),
-            OSCValue::Float64(_) => todo!(),
             OSCValue::AltString => todo!(),
-            OSCValue::ASCIICharacter(_) => todo!(),
             OSCValue::RGBAColor(_) => todo!(),
             OSCValue::MIDIMessage(_) => todo!(),
-            OSCValue::Bool(_) => {}
-            OSCValue::Nil => todo!(),
-            OSCValue::Infinitum => todo!(),
-            OSCValue::LeftSquareBracket => todo!(),
-            OSCValue::RightSquareBracket => todo!(),
         }
     }
 }
+
+/// impl From<xx> for OSCValue
+macro_rules! to_osc_value {
+    ($type:ty,$ov:ident) => {
+        impl From<$type> for OSCValue {
+            fn from(v: $type) -> Self {
+                OSCValue::$ov(v)
+            }
+        }
+    };
+}
+
+to_osc_value!(i32, Int32);
+to_osc_value!(i64, Int64);
+to_osc_value!(bool, Bool);
+to_osc_value!(String, OSCString);
+to_osc_value!(f32, Float32);
