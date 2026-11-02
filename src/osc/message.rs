@@ -46,3 +46,23 @@ impl OscMessage {
         buffer
     }
 }
+
+#[cfg(test)]
+mod test {
+    use crate::osc::{message::OscMessage, value::OSCValue};
+
+    #[test]
+    fn test() {
+        assert_eq!(
+            OscMessage::new("/chatbox/input")
+                .arg(OSCValue::OSCString("hi~".to_string()))
+                .arg(OSCValue::Bool(true))
+                .arg(OSCValue::Bool(true))
+                .encode(),
+            vec![
+                47, 99, 104, 97, 116, 98, 111, 120, 47, 105, 110, 112, 117, 116, 0, 0, 44, 115, 84,
+                84, 0, 0, 0, 0, 104, 105, 126, 0
+            ]
+        )
+    }
+}

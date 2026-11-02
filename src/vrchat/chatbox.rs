@@ -36,3 +36,37 @@ impl Default for ChatboxInput {
         }
     }
 }
+
+///  Toggle the typing indicator on or off.
+#[derive(Debug)]
+pub struct ChatboxTyping {
+    toggle: bool,
+}
+
+impl From<ChatboxTyping> for OscMessage {
+    fn from(value: ChatboxTyping) -> Self {
+        OscMessage::new("/chatbox/typing").arg(OSCValue::Bool(value.toggle))
+    }
+}
+
+impl ChatboxTyping {
+    pub fn new(toggle: bool) -> Self {
+        Self { toggle }
+    }
+}
+
+#[cfg(test)]
+mod test {
+    use crate::{osc::message::OscMessage, vrchat::chatbox::ChatboxInput};
+
+    #[test]
+    fn test_chatbox_input() {
+        assert_eq!(
+            OscMessage::from(ChatboxInput::new("hi~")).encode(),
+            vec![
+                47, 99, 104, 97, 116, 98, 111, 120, 47, 105, 110, 112, 117, 116, 0, 0, 44, 115, 84,
+                84, 0, 0, 0, 0, 104, 105, 126, 0
+            ]
+        );
+    }
+}

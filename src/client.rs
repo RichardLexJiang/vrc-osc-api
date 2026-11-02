@@ -59,12 +59,19 @@ impl VRCOSCClient {
 mod test {
     use std::io;
 
-    use anyhow::{Error, Result};
+    use anyhow::{Error, Ok, Result};
 
-    use crate::{client::VRCOSCClient, vrchat::chatbox::ChatboxInput};
+    use crate::{
+        client::VRCOSCClient,
+        vrchat::{
+            avatar::AvatarEyeheight,
+            chatbox::{ChatboxInput, ChatboxTyping},
+        },
+    };
 
     #[test]
-    fn test_client() -> Result<()> {
+    /// require console input
+    fn test_chatbox_input() -> Result<()> {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
         let mut input = String::new();
@@ -74,6 +81,24 @@ mod test {
             input.strip_suffix("\r\n").expect("what's wrong?")
         );
         let _ = client.send(ChatboxInput::new(&input))?;
+        Ok(())
+    }
+
+    #[test]
+    /// require console input
+    fn test_chatbox_typing() -> Result<()> {
+        let mut client = VRCOSCClient::new()?;
+        client.start()?;
+        let _ = client.send(ChatboxTyping::new(true))?;
+        Ok(())
+    }
+
+    #[test]
+    /// require console input
+    fn test_avatar_height_change() -> Result<()> {
+        let mut client = VRCOSCClient::new()?;
+        client.start()?;
+        let _ = client.send(AvatarEyeheight::new(30.0))?;
         Ok(())
     }
 }
