@@ -67,8 +67,8 @@ impl OSCValue {
 }
 
 /// impl From<xx> for OSCValue
-macro_rules! to_osc_value {
-    ($type:ty,$ov:ident) => {
+macro_rules! oscvalue_mapping {
+    ($type:ty=>$ov:ident) => {
         impl From<$type> for OSCValue {
             fn from(v: $type) -> Self {
                 OSCValue::$ov(v)
@@ -77,8 +77,8 @@ macro_rules! to_osc_value {
     };
 }
 
-to_osc_value!(i32, Int32);
-to_osc_value!(i64, Int64);
-to_osc_value!(bool, Bool);
-to_osc_value!(String, OSCString);
-to_osc_value!(f32, Float32);
+oscvalue_mapping!(i32=> Int32);
+oscvalue_mapping!(i64=>Int64);
+oscvalue_mapping!(bool=> Bool);
+oscvalue_mapping!(String=> OSCString);
+oscvalue_mapping!(f32=> Float32);
