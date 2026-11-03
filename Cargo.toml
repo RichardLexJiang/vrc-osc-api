@@ -1,6 +1,6 @@
 [package]
 name = "vrc-osc-api"
-version = "0.0.1"
+version = "0.0.2"
 edition = "2024"
 description = "A small, personal Rust SDK for sending OSC messages to VRChat over UDP."
 license = "MIT"
