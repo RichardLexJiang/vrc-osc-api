@@ -1,4 +1,13 @@
-use crate::osc::message::OscMessage;
+use crate::to_osc_message;
+
+to_osc_message!(
+    ChatboxInput,
+    "/chatbox/input",
+    msg,
+    bypass_keyboard,
+    sfx_trigger
+);
+to_osc_message!(ChatboxTyping, "/chatbox/typing", toggle);
 
 /// - `msg` Input text into the chatbox.
 /// - If `bypass_keyboard` is True, send the text in `msg` immediately, bypassing the keyboard. If `bypass_keyboard` is False, open the keyboard and populate it with the provided text.  
@@ -18,15 +27,6 @@ impl ChatboxInput {
     }
 }
 
-impl From<ChatboxInput> for OscMessage {
-    fn from(value: ChatboxInput) -> Self {
-        OscMessage::new("/chatbox/input")
-            .arg(value.msg)
-            .arg(value.bypass_keyboard)
-            .arg(value.sfx_trigger)
-    }
-}
-
 impl Default for ChatboxInput {
     fn default() -> Self {
         Self {
@@ -41,12 +41,6 @@ impl Default for ChatboxInput {
 #[derive(Debug)]
 pub struct ChatboxTyping {
     toggle: bool,
-}
-
-impl From<ChatboxTyping> for OscMessage {
-    fn from(value: ChatboxTyping) -> Self {
-        OscMessage::new("/chatbox/typing").arg(value.toggle)
-    }
 }
 
 impl ChatboxTyping {

@@ -64,7 +64,7 @@ mod test {
     use crate::{
         client::VRCOSCClient,
         vrchat::{
-            avatar::AvatarEyeheight,
+            avatar::{AvatarEyeheight, AvatarEyeheightMax, AvatarEyeheightScalingAllowed},
             chatbox::{ChatboxInput, ChatboxTyping},
         },
     };
@@ -98,7 +98,18 @@ mod test {
     fn test_avatar_height_change() -> Result<()> {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
-        let _ = client.send(AvatarEyeheight::new(30.0))?;
+        let _ = client.send(AvatarEyeheight::new(10.0))?;
+        Ok(())
+    }
+
+    #[test]
+    /// require console input
+    fn test_avatar_height_max_min_change() -> Result<()> {
+        let mut client = VRCOSCClient::new()?;
+        client.start()?;
+        let _ = client.send(AvatarEyeheightScalingAllowed::new(true))?;
+        let _ = client.send(AvatarEyeheightMax::new(20.0))?;
+        let _ = client.send(AvatarEyeheightMax::new(0.01))?;
         Ok(())
     }
 }

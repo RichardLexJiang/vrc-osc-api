@@ -21,24 +21,30 @@ pub enum OSCValue {
 
 impl OSCValue {
     pub fn get_tag(&self) -> u8 {
-        match &self {
-            OSCValue::Int32(_) => 'i' as u8,
-            OSCValue::Float32(_) => 'f' as u8,
-            OSCValue::OSCString(_) => 's' as u8,
-            OSCValue::OSCBlob(_) => 'b' as u8,
-            OSCValue::Int64(_) => 'h' as u8,
-            OSCValue::OSCTimetag(_) => 't' as u8,
-            OSCValue::Float64(_) => 'd' as u8,
-            OSCValue::AltString => 'S' as u8,
-            OSCValue::ASCIICharacter(_) => 'c' as u8,
-            OSCValue::RGBAColor(_) => 'r' as u8,
-            OSCValue::MIDIMessage(_) => 'm' as u8,
-            OSCValue::Bool(b) => (if *b { 'T' } else { 'F' }) as u8,
-            OSCValue::Nil => 'N' as u8,
-            OSCValue::Infinitum => 'I' as u8,
-            OSCValue::LeftSquareBracket => '[' as u8,
-            OSCValue::RightSquareBracket => ']' as u8,
-        }
+        (match &self {
+            OSCValue::Int32(_) => 'i',
+            OSCValue::Float32(_) => 'f',
+            OSCValue::OSCString(_) => 's',
+            OSCValue::OSCBlob(_) => 'b',
+            OSCValue::Int64(_) => 'h',
+            OSCValue::OSCTimetag(_) => 't',
+            OSCValue::Float64(_) => 'd',
+            OSCValue::AltString => 'S',
+            OSCValue::ASCIICharacter(_) => 'c',
+            OSCValue::RGBAColor(_) => 'r',
+            OSCValue::MIDIMessage(_) => 'm',
+            OSCValue::Bool(b) => {
+                if *b {
+                    'T'
+                } else {
+                    'F'
+                }
+            }
+            OSCValue::Nil => 'N',
+            OSCValue::Infinitum => 'I',
+            OSCValue::LeftSquareBracket => '[',
+            OSCValue::RightSquareBracket => ']',
+        }) as u8
     }
 
     pub fn write_to_buffer(&self, buffer: &mut Vec<u8>) {
@@ -82,3 +88,4 @@ oscvalue_mapping!(i64=>Int64);
 oscvalue_mapping!(bool=> Bool);
 oscvalue_mapping!(String=> OSCString);
 oscvalue_mapping!(f32=> Float32);
+oscvalue_mapping!(f64=> Float64);
