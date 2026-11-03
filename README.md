@@ -1,32 +1,43 @@
-# vrc-osc-api 
+# vrc-osc-api
 
 👇 AI generated 👇
 
-A small, personal Rust SDK for sending OSC messages to VRChat over UDP. The project is currently a work in progress, intended for self-use and experimentation rather than as a stable, general-purpose OSC implementation.
+A small Rust SDK for sending OSC messages to VRChat over UDP.
 
-## What it includes
+This crate is intended for personal experimentation and lightweight integration work. It focuses on the OSC messages most commonly used from VRChat tooling and keeps the API small and direct.
 
-- A UDP client with configurable bind and target addresses.
-- An OSC message builder.
-- A VRChat chatbox input message (`/chatbox/input`).
+## Features
+
+- UDP client with configurable bind and target addresses
+- OSC message builder and encoder
+- VRChat chatbox helpers:
+  - `/chatbox/input`
+  - `/chatbox/typing`
+- VRChat avatar scaling helpers:
+  - `/avatar/eyeheight`
+  - `/avatar/eyeheightmin`
+  - `/avatar/eyeheightmax`
+  - `/avatar/eyeheightscalingallowed`
 
 ## Requirements
 
-- Rust (edition 2024).
-- VRChat running with OSC enabled.
+- Rust 2024 edition
+- VRChat with OSC enabled
 
-VRChat's default OSC input address is `127.0.0.1:9000`. If your setup uses a different address, configure the client target accordingly.
+VRChat usually listens for OSC input on `127.0.0.1:9000`. If your setup uses a different target address, configure it before starting the client.
 
-## Use from a Rust project
+## Installation
 
-add it as a dependency:
+Add the crate to your project:
 
 ```toml
 [dependencies]
-vrc-osc-api = "0.0.1"
+vrc-osc-api = "0.0.2"
 ```
 
-Then send a chatbox message:
+## Quick start
+
+Send a chatbox message:
 
 ```rust
 use std::error::Error;
@@ -40,7 +51,7 @@ fn main() -> Result<(), Box<dyn Error>> {
 }
 ```
 
-The client defaults to binding `0.0.0.0:0` and sending to `127.0.0.1:9000`. Set different addresses before starting if needed:
+Customize the bind/target addresses before starting:
 
 ```rust
 let mut client = VRCOSCClient::new()?;
@@ -49,11 +60,15 @@ client.replace_target("127.0.0.1:9000".parse()?);
 client.start()?;
 ```
 
-`start()` must be called before `send()`. `send()` accepts a value convertible into an `OscMessage`; `ChatboxInput` is supported directly.
+Notes:
 
-## Creating an OSC message
+- `start()` must be called before `send()`.
+- `send()` accepts anything that can be converted into an `OscMessage`.
+- `ChatboxInput` and the built-in VRChat message wrappers are supported directly.
 
-The low-level message builder is available for constructing messages:
+## Building OSC messages manually
+
+The low-level message types are also available when you want to build a packet yourself:
 
 ```rust
 use vrc_osc_api::osc::{message::OscMessage, value::OSCValue};
@@ -65,13 +80,20 @@ let message = OscMessage::new("/example")
 let packet: Vec<u8> = message.encode();
 ```
 
-## Current limitations
+## Current status and caveats
 
-This SDK is under active development and does not yet implement all OSC value encodings. `OSCValue` variants such as blobs, 64-bit values, and several other types currently panic if encoded. Use only the variants whose encoding you have verified, and treat generated packets as experimental.
+This project is still under active development and should be treated as experimental rather than a fully-complete OSC library.
 
-The chatbox API currently exposes only the message text through `ChatboxInput::new`; keyboard-bypass and notification-sound options use their defaults. The OSC encoder and its string padding are also incomplete, so verify packet behavior against your VRChat setup before relying on it.
+Some important limits to be aware of:
+
+- not every OSC value variant is implemented for encoding
+- blob, timetag, and some alternate OSC types are not fully supported yet
+- string padding and some low-level encoding details are still being refined
+- generated packets should be validated against your VRChat setup before depending on them in production automation
+
+The current API is intentionally lightweight and is best used for direct, tested VRChat message sending rather than as a general-purpose OSC framework.
 
 ## References
 
-[OSC-Specification-1.0](https://opensoundcontrol.stanford.edu/spec-1_0.html)  
-[VRC OSC Overview](https://docs.vrchat.com/docs/osc-overview)  
+- [OSC Specification 1.0](https://opensoundcontrol.stanford.edu/spec-1_0.html)
+- [VRChat OSC Overview](https://docs.vrchat.com/docs/osc-overview)
