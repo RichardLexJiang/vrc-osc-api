@@ -18,6 +18,10 @@ This crate is intended for personal experimentation and lightweight integration 
   - `/avatar/eyeheightmin`
   - `/avatar/eyeheightmax`
   - `/avatar/eyeheightscalingallowed`
+- VRChat input controller helpers for the documented axes and buttons:
+  - `/input/Vertical`, `/input/Horizontal`, `/input/LookHorizontal`
+  - Held-object axes such as `/input/MoveHoldFB` and `/input/SpinHoldUD`
+  - Movement, look, hand, menu, voice, and other button inputs
 
 ## Requirements
 
@@ -32,7 +36,7 @@ Add the crate to your project:
 
 ```toml
 [dependencies]
-vrc-osc-api = "0.0.2"
+vrc-osc-api = "0.0.3"
 ```
 
 ## Quick start
@@ -78,6 +82,24 @@ let message = OscMessage::new("/example")
     .arg(OSCValue::Float32(0.5));
 
 let packet: Vec<u8> = message.encode();
+```
+
+## Controlling VRChat inputs
+
+The `vrchat::input` module provides a typed message for each input documented by
+VRChat. Axes accept `f32` values (typically from `-1.0` to `1.0`) and should be
+reset to `0.0` when no longer used. Buttons accept `bool` and encode the
+documented integer values `1` (pressed) and `0` (released):
+
+```rust
+use vrc_osc_api::{client::VRCOSCClient, vrchat::input::{InputJump, InputVertical}};
+
+let mut client = VRCOSCClient::new()?;
+client.start()?;
+client.send(InputVertical::new(1.0))?;
+client.send(InputJump::new(true))?;
+client.send(InputJump::new(false))?;
+client.send(InputVertical::new(0.0))?;
 ```
 
 ## Current status and caveats

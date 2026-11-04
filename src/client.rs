@@ -57,7 +57,7 @@ impl VRCOSCClient {
 
 #[cfg(test)]
 mod test {
-    use std::io;
+    use std::{io, thread::sleep, time::Duration};
 
     use anyhow::{Error, Ok, Result};
 
@@ -66,8 +66,13 @@ mod test {
         vrchat::{
             avatar::{AvatarEyeheight, AvatarEyeheightMax, AvatarEyeheightScalingAllowed},
             chatbox::{ChatboxInput, ChatboxTyping},
+            input::{
+                InputJump, InputMoveBackward, InputMoveForward, InputMoveLeft, InputMoveRight,
+            },
         },
     };
+
+    const SHORT_PRESS_PERIOD: u64 = 60;
 
     #[test]
     /// require console input
@@ -110,6 +115,60 @@ mod test {
         let _ = client.send(AvatarEyeheightScalingAllowed::new(true))?;
         let _ = client.send(AvatarEyeheightMax::new(20.0))?;
         let _ = client.send(AvatarEyeheightMax::new(0.01))?;
+        Ok(())
+    }
+
+    #[test]
+    fn test_input_jump() -> Result<()> {
+        let mut client = VRCOSCClient::new()?;
+        client.start()?;
+
+        for i in 0..99 {
+            println!("jump-{i:?}");
+            let _ = client.send(InputJump::new(true))?;
+            sleep(Duration::from_millis(SHORT_PRESS_PERIOD));
+            let _ = client.send(InputJump::new(false))?;
+            sleep(Duration::from_millis(580));
+        }
+        Ok(())
+    }
+
+    #[test]
+    fn test_move_around_and_jump() -> Result<()> {
+        let mut client = VRCOSCClient::new()?;
+        client.start()?;
+        for _ in 0..999 {
+            let _ = turn_a_smooth_round(&client)?;
+            let _ = jump_until_down(&client)?;
+        }
+
+        Ok(())
+    }
+
+    fn jump_until_down(client: &VRCOSCClient) -> Result<()> {
+        let _ = client.send(InputJump::new(true))?;
+        sleep(Duration::from_millis(SHORT_PRESS_PERIOD));
+        let _ = client.send(InputJump::new(false))?;
+        sleep(Duration::from_millis(600));
+        Ok(())
+    }
+
+    fn turn_a_smooth_round(client: &VRCOSCClient) -> Result<()> {
+        let press_ms = 260;
+        let _ = client.send(InputMoveForward::new(true))?;
+        sleep(Duration::from_millis(press_ms / 2));
+        let _ = client.send(InputMoveLeft::new(true))?;
+        sleep(Duration::from_millis(press_ms / 2));
+        let _ = client.send(InputMoveForward::new(false))?;
+        let _ = client.send(InputMoveBackward::new(true))?;
+        sleep(Duration::from_millis(press_ms / 2));
+        let _ = client.send(InputMoveLeft::new(false))?;
+        let _ = client.send(InputMoveRight::new(true))?;
+        sleep(Duration::from_millis(press_ms / 2));
+        let _ = client.send(InputMoveBackward::new(false))?;
+        sleep(Duration::from_millis(press_ms / 2));
+        let _ = client.send(InputMoveRight::new(false))?;
+        sleep(Duration::from_millis(SHORT_PRESS_PERIOD));
         Ok(())
     }
 }
