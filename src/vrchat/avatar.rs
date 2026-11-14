@@ -22,6 +22,10 @@ impl AvatarEyeheight {
     pub fn new(meter: f32) -> Self {
         Self { meter }
     }
+
+    pub fn meter(&self) -> f32 {
+        self.meter
+    }
 }
 
 impl Default for AvatarEyeheight {
@@ -40,6 +44,10 @@ impl AvatarEyeheightMin {
     pub fn new(min: f32) -> Self {
         Self { min }
     }
+
+    pub fn min(&self) -> f32 {
+        self.min
+    }
 }
 
 /// The maximum user-selectable eye height configured by Udon, defaults to 5.0. Does not affect settable range via OSC.
@@ -52,6 +60,10 @@ impl AvatarEyeheightMax {
     pub fn new(max: f32) -> Self {
         Self { max }
     }
+
+    pub fn max(&self) -> f32 {
+        self.max
+    }
 }
 
 ///False, if disabled by Udon or world tag (website). When false, writes to eyeheight will be ignored.
@@ -63,5 +75,9 @@ pub struct AvatarEyeheightScalingAllowed {
 impl AvatarEyeheightScalingAllowed {
     pub fn new(trigger: bool) -> Self {
         Self { trigger }
+    }
+
+    pub fn trigger(&self) -> bool {
+        self.trigger
     }
 }

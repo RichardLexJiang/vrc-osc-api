@@ -12,6 +12,10 @@ macro_rules! axis_input {
             pub fn new(value: f32) -> Self {
                 Self { value }
             }
+
+            pub fn value(&self) -> f32 {
+                self.value
+            }
         }
 
         to_osc_message!($name, $address, value);
@@ -31,6 +35,10 @@ macro_rules! button_input {
                 Self {
                     value: i32::from(pressed),
                 }
+            }
+
+            pub fn value(&self) -> i32 {
+                self.value
             }
         }
 

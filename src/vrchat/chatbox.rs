@@ -12,6 +12,7 @@ to_osc_message!(ChatboxTyping, "/chatbox/typing", toggle);
 /// - `msg` Input text into the chatbox.
 /// - If `bypass_keyboard` is True, send the text in `msg` immediately, bypassing the keyboard. If `bypass_keyboard` is False, open the keyboard and populate it with the provided text.  
 /// - `sfx_trigger` is an additional bool parameter that when set to False will not trigger the notification SFX (defaults to True if not specified).
+#[derive(Debug)]
 pub struct ChatboxInput {
     msg: String,
     bypass_keyboard: bool,
@@ -25,6 +26,30 @@ impl ChatboxInput {
             ..Self::default()
         }
     }
+
+    pub fn msg(&self) -> &str {
+        &self.msg
+    }
+
+    pub fn bypass_keyboard(&self) -> bool {
+        self.bypass_keyboard
+    }
+
+    pub fn sfx_trigger(&self) -> bool {
+        self.sfx_trigger
+    }
+
+    pub fn set_msg(&mut self, msg: String) {
+        self.msg = msg;
+    }
+
+    pub fn set_bypass_keyboard(&mut self, bypass_keyboard: bool) {
+        self.bypass_keyboard = bypass_keyboard;
+    }
+
+    pub fn set_sfx_trigger(&mut self, sfx_trigger: bool) {
+        self.sfx_trigger = sfx_trigger;
+    }
 }
 
 impl Default for ChatboxInput {
@@ -32,7 +57,7 @@ impl Default for ChatboxInput {
         Self {
             msg: Default::default(),
             bypass_keyboard: true,
-            sfx_trigger: true,
+            sfx_trigger: false,
         }
     }
 }
@@ -46,6 +71,14 @@ pub struct ChatboxTyping {
 impl ChatboxTyping {
     pub fn new(toggle: bool) -> Self {
         Self { toggle }
+    }
+
+    pub fn toggle(&self) -> bool {
+        self.toggle
+    }
+
+    pub fn toggle_mut(&mut self) -> &mut bool {
+        &mut self.toggle
     }
 }
 

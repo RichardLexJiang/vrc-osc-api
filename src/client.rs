@@ -104,7 +104,7 @@ mod test {
     fn test_avatar_height_change() -> Result<()> {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
-        let _ = client.send(AvatarEyeheight::new(10.0))?;
+        let _ = client.send(AvatarEyeheight::new(100.0))?;
         Ok(())
     }
 
@@ -114,7 +114,7 @@ mod test {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
         let _ = client.send(AvatarEyeheightScalingAllowed::new(true))?;
-        let _ = client.send(AvatarEyeheightMax::new(20.0))?;
+        let _ = client.send(AvatarEyeheightMax::new(50.0))?;
         let _ = client.send(AvatarEyeheightMax::new(0.01))?;
         Ok(())
     }
@@ -124,7 +124,7 @@ mod test {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
 
-        for i in 0..1 {
+        for i in 0..9999 {
             println!("jump-{i:?}");
             let _ = client.send(InputJump::new(true))?;
             sleep(Duration::from_millis(SHORT_PRESS_PERIOD));
@@ -138,10 +138,15 @@ mod test {
     fn test_move_around_and_jump() -> Result<()> {
         let mut client = VRCOSCClient::new()?;
         client.start()?;
-        for _ in 0..1 {
+        for i in 0..9999 {
+            let _ = client.send(ChatboxInput::new(&format!(
+                "AFK, Auto Program, fucking around {i:?} times"
+            )))?;
+            println!("move around and jump {i:?} times");
             let _ = move_a_smooth_round(&client)?;
-            let _ = client.send(InputLookHorizontal::new(-1.0))?;
             let _ = jump_until_down(&client)?;
+            let _ = client.send(InputLookHorizontal::new(1.0))?;
+            sleep(Duration::from_millis(100));
             let _ = client.send(InputLookHorizontal::new(0.0))?;
         }
         Ok(())
